@@ -54,6 +54,40 @@ describe('buildDashboard', () => {
   })
 })
 
+describe('source isolation', () => {
+  it('reads plans and usage from injected directories instead of the real home', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'hub-iso-'))
+    const home = join(root, 'home')
+    const dataDir = join(root, 'data')
+    const plansDir = join(root, 'plans')
+    const claudeDir = join(root, 'claude')
+    const codexDir = join(root, 'codex')
+    const projectAbs = join(home, 'demo-app')
+    mkdirSync(projectAbs, { recursive: true })
+    mkdirSync(dataDir); mkdirSync(plansDir)
+    mkdirSync(join(claudeDir, 'projects', 'demo'), { recursive: true })
+    mkdirSync(join(codexDir, 'sessions'), { recursive: true })
+    writeFileSync(join(projectAbs, 'package.json'), '{}')
+    writeFileSync(join(dataDir, 'store.json'), JSON.stringify({ version: 1, projects: {} }))
+    writeFileSync(join(dataDir, 'config.json'), JSON.stringify({
+      tools: { claude: { label: 'Claude', plan: null, limits: null }, codex: { label: 'Codex', plan: null, limits: null }, gemini: { label: 'Gemini', plan: null, limits: null } },
+      scanRoots: ['~'], staleDays: 14, deadlineWarnDays: 14,
+    }))
+    writeFileSync(join(plansDir, 'demo.md'), `# demo\npath: ${projectAbs}\n- [x] a\n- [ ] b\n`)
+    writeFileSync(join(claudeDir, 'projects', 'demo', 's.jsonl'), JSON.stringify({
+      type: 'assistant', timestamp: new Date().toISOString(), cwd: projectAbs,
+      message: { usage: { input_tokens: 1000, output_tokens: 500, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } },
+    }) + '\n')
+
+    const app = createApp({ dataDir, home, plansDir, claudeDir, codexDir })
+    const res = await (await app.request('/api/dashboard')).json()
+    const demo = res.projects.find((p: { id: string }) => p.id === 'demo-app')
+    expect(demo.plan).toMatchObject({ done: 1, total: 2 })
+    expect(demo.weeklyTokensByTool.claude).toBe(1500)
+    expect(res.tools.claude.totals.weekly).toBe(1500)
+  })
+})
+
 describe('API mutations', () => {
   it('preserves canonical nested-root paths for first PATCH and order writes', async () => {
     const { app, dataDir } = apiFixture()

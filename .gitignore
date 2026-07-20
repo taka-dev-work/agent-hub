@@ -7,3 +7,5 @@ data/config.json
 data/usage-cache.json
 data/.store.*.tmp
 data/.usage-cache.tmp
+
+.demo/

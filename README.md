@@ -4,6 +4,10 @@ A local dashboard for deciding **which project to work on next** when you run ma
 
 Agent Hub is not another usage meter. Token counters tell you what you spent; they don't tell you what to do next. This tool puts the facts your disk already knows — how long each project has been untouched, how far its plan got, how many tokens each agent poured into it — next to the judgment only you can supply, and then lets you rank the list by hand.
 
+![Agent Hub dashboard showing six ranked projects with token spend, plan progress and stale warnings](docs/screenshot.png)
+
+*Demo data. Note `data-pipeline` at rank 5: labeled "Blocks the Q3 analytics launch," untouched for 21 days, zero tokens this week. That contradiction is the whole point.*
+
 ## The problem
 
 Running five or ten projects through coding agents, you lose the thread. Which one is stalled? Which one did I claim was urgent and then not touch for three weeks? Progress data alone doesn't answer this, because priority depends on deadlines, revenue impact, and strategy that live in your head, not in the repo.
@@ -36,6 +40,14 @@ open http://localhost:5179
 
 The first load parses every session log and can take a while; later loads read an incremental cache and are fast. Nothing leaves your machine — there is no network call, no telemetry, and the server binds to `127.0.0.1` only.
 
+### Try it without touching your data
+
+```bash
+npm run demo
+```
+
+This generates a throwaway fixture in `.demo/` — six fake repos, plans, and session logs — and runs the dashboard against it. Your real projects, `~/.claude`, and `~/.codex` are never read. It's how the screenshot above was made.
+
 ## Configuration
 
 Copy the example and edit it:
@@ -52,6 +64,8 @@ cp data/config.example.json data/config.json
 | `deadlineWarnDays` | Days before a deadline turns amber. Default 14. |
 
 Agent Hub runs fine with no config file at all — it falls back to built-in defaults.
+
+Every source directory can also be redirected with environment variables, which is what demo mode uses: `AGENT_HUB_DATA_DIR`, `AGENT_HUB_HOME`, `AGENT_HUB_PLANS_DIR`, `AGENT_HUB_CLAUDE_DIR`, `AGENT_HUB_CODEX_DIR`.
 
 **About the budgets:** providers do not expose plan limits through any API, so `limits` is whatever you decide it is. The useful move is to run the tool for a week, look at your own weekly totals, and set the ceiling somewhere above your normal pace. Then the bar means "unusually heavy week," which is a signal you can act on. A number copied from a marketing page is not.
 

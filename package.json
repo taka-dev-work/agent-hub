@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "dev": "concurrently -n api,web \"tsx watch server/index.ts\" \"vite --config web/vite.config.ts\"",
+    "demo": "node scripts/demo-fixture.mjs && concurrently -n api,web \"AGENT_HUB_DATA_DIR=$PWD/.demo/data AGENT_HUB_HOME=$PWD/.demo/home AGENT_HUB_PLANS_DIR=$PWD/.demo/plans AGENT_HUB_CLAUDE_DIR=$PWD/.demo/claude AGENT_HUB_CODEX_DIR=$PWD/.demo/codex tsx watch server/index.ts\" \"vite --config web/vite.config.ts\"",
     "test": "vitest run"
   },
   "dependencies": {

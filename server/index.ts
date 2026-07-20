@@ -38,9 +38,19 @@ function validIds(value: unknown): value is string[] {
     && new Set(value).size === value.length
 }
 
-export function createApp(options: { dataDir?: string; home?: string } = {}) {
+export interface AppOptions {
+  dataDir?: string
+  home?: string
+  /** Overrides for the directories scanned for plans and agent session logs. Used by tests and demo mode. */
+  plansDir?: string
+  claudeDir?: string
+  codexDir?: string
+}
+
+export function createApp(options: AppOptions = {}) {
   const dataDir = options.dataDir ?? DATA_DIR
   const home = options.home ?? homedir()
+  const { plansDir, claudeDir, codexDir } = options
   const app = new Hono()
 
   async function canonicalPaths() {
@@ -54,7 +64,10 @@ export function createApp(options: { dataDir?: string; home?: string } = {}) {
   app.get('/api/dashboard', async c => {
     const [config, store] = await Promise.all([readConfig(dataDir), readStore(dataDir)])
     const found = await scanProjects(config.scanRoots, store.projects, home)
-    const [plans, cache] = await Promise.all([matchPlans(found), collectUsage(join(dataDir, 'usage-cache.json'))])
+    const [plans, cache] = await Promise.all([
+      matchPlans(found, plansDir),
+      collectUsage(join(dataDir, 'usage-cache.json'), { claudeDir, codexDir }),
+    ])
     const totals = {} as Record<ToolId, UsageTotals>
     const weekly = {} as Record<ToolId, Record<string, number>>
     const warns = {} as Record<ToolId, boolean>
@@ -93,7 +106,13 @@ export function createApp(options: { dataDir?: string; home?: string } = {}) {
 }
 
 export function startServer() {
-  const app = createApp()
+  const app = createApp({
+    dataDir: process.env.AGENT_HUB_DATA_DIR,
+    home: process.env.AGENT_HUB_HOME,
+    plansDir: process.env.AGENT_HUB_PLANS_DIR,
+    claudeDir: process.env.AGENT_HUB_CLAUDE_DIR,
+    codexDir: process.env.AGENT_HUB_CODEX_DIR,
+  })
   serve({ fetch: app.fetch, port: 5178, hostname: '127.0.0.1' })
   console.log('agent-hub api on http://127.0.0.1:5178')
 }
