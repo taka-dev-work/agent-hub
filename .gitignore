@@ -1,0 +1,9 @@
+node_modules/
+web/dist/
+
+# Local user data — never commit
+data/store.json
+data/config.json
+data/usage-cache.json
+data/.store.*.tmp
+data/.usage-cache.tmp

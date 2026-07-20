@@ -1,0 +1,10 @@
+{
+  "tools": {
+    "claude": { "label": "Claude Code", "plan": null, "limits": null },
+    "codex": { "label": "Codex", "plan": null, "limits": null },
+    "gemini": { "label": "Gemini CLI", "plan": null, "limits": null }
+  },
+  "scanRoots": ["~"],
+  "staleDays": 14,
+  "deadlineWarnDays": 14
+}
