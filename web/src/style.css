@@ -5,6 +5,14 @@
   --green-bg: #eaf3de; --green-fg: #3b6d11; --red-bg: #fcebeb; --red-fg: #a32d2d;
   --amber-bg: #faeeda; --amber-fg: #854f0b; --accent-bg: #e6f1fb; --accent-fg: #185fa5;
 }
+/* JS resolves "system" to a concrete value, so one dark block covers every case. */
+:root[data-theme="dark"] {
+  --bg: #1b1a17; --surface: #24231f; --surface-2: #302e28;
+  --text: #ecebe6; --text-2: #a6a39a; --text-3: #76736b;
+  --border: #383530; --accent: #6aa9e9; --amber: #f0a83a; --red: #ef706f;
+  --green-bg: #232f1b; --green-fg: #a8d179; --red-bg: #351f1f; --red-fg: #f09291;
+  --amber-bg: #362a17; --amber-fg: #f0be6d; --accent-bg: #1c2c3f; --accent-fg: #8fc1f0;
+}
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.6 -apple-system, "Hiragino Sans", sans-serif; }
 #root { max-width: 860px; margin: 0 auto; padding: 24px 16px; }
@@ -12,6 +20,6 @@ body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.6 -app
 .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 12px 16px; }
 .bar { height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
 .bar > div { height: 100%; background: var(--accent); }
-button { font: inherit; font-size: 12px; padding: 4px 10px; border: 0.5px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; }
+button { font: inherit; font-size: 12px; padding: 4px 10px; border: 0.5px solid var(--border); border-radius: 8px; background: var(--surface); color: inherit; cursor: pointer; }
 button:hover { background: var(--surface-2); }
-input.inline { font: inherit; font-size: 13px; border: 0.5px solid var(--accent); border-radius: 8px; padding: 5px 9px; width: 100%; }
+input.inline { font: inherit; font-size: 13px; border: 0.5px solid var(--accent); border-radius: 8px; padding: 5px 9px; width: 100%; background: var(--surface); color: inherit; }

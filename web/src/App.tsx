@@ -3,6 +3,7 @@ import { useDashboard, patchProject } from './api.ts'
 import { TokenPanel } from './components/TokenPanel.tsx'
 import { ProjectList } from './components/ProjectList.tsx'
 import { FilterTabs } from './components/FilterTabs.tsx'
+import { ThemeToggle } from './components/ThemeToggle.tsx'
 import { isDeadlineSoon } from './integrity.ts'
 import type { ToolId } from './types.ts'
 
@@ -26,6 +27,7 @@ export default function App() {
           <h1 style={{ fontSize: 18, fontWeight: 500, margin: 0 }}>Agent hub</h1>
           <span style={{ fontSize: 12, color: 'var(--text-3)' }}>scanned {new Date(data.scannedAt).toLocaleString()}</span>
           <button onClick={reload}>Rescan</button>
+          <ThemeToggle />
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <span className="badge" style={{ background: 'var(--red-bg)', color: 'var(--red-fg)' }}>Stale {staleCount}</span>

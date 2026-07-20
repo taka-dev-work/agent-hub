@@ -7,6 +7,17 @@
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    // Resolve the theme before first paint so a dark-mode reload never flashes white.
+    try {
+      var stored = localStorage.getItem('agent-hub:theme')
+      var theme = stored === 'light' || stored === 'dark'
+        ? stored
+        : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      document.documentElement.dataset.theme = theme
+      document.documentElement.style.colorScheme = theme
+    } catch (e) {}
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

@@ -25,6 +25,7 @@ There is deliberately no priority score. Ranking is a value judgment, and automa
 - **Project cards in your chosen order** — last activity (red past your stale threshold), branch, plan progress, deadline countdown, per-tool tokens spent this week, and an editable next action.
 - **The contradictions** — a project labeled "critical for the client demo" showing `stale 21d` and zero tokens this week is the signal the tool exists to surface.
 - **Tool filter** — see only the projects a given agent actually worked on this week.
+- **Light and dark** — follows your OS by default; the header toggle cycles Auto → Light → Dark and remembers the choice.
 
 ## Install
 
