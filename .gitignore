@@ -9,3 +9,6 @@ data/.store.*.tmp
 data/.usage-cache.tmp
 
 .demo/
+
+.hub.log
+.hub.mode

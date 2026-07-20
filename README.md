@@ -48,6 +48,26 @@ npm run demo
 
 This generates a throwaway fixture in `.demo/` — six fake repos, plans, and session logs — and runs the dashboard against it. Your real projects, `~/.claude`, and `~/.codex` are never read. It's how the screenshot above was made.
 
+### A one-word launcher
+
+A dashboard you have to `cd` into a directory to start is a dashboard you stop opening. Symlink the launcher onto your PATH:
+
+```bash
+ln -s "$PWD/scripts/hub.sh" ~/.local/bin/hub
+```
+
+Then, from anywhere:
+
+```bash
+hub          # start if needed, open the dashboard (~1.5s cold, instant if already up)
+hub demo     # same, against demo data
+hub stop     # stop it
+hub status   # what's running
+hub log      # tail the server log
+```
+
+It runs the server detached, waits until it answers, and opens your browser. Starting when it's already running just opens the tab; switching between `hub` and `hub demo` restarts it against the other data source. The repo path is resolved from the symlink, so it works wherever you cloned to — override with `AGENT_HUB_REPO` if you need to.
+
 ## Configuration
 
 Copy the example and edit it:
@@ -65,7 +85,7 @@ cp data/config.example.json data/config.json
 
 Agent Hub runs fine with no config file at all — it falls back to built-in defaults.
 
-Every source directory can also be redirected with environment variables, which is what demo mode uses: `AGENT_HUB_DATA_DIR`, `AGENT_HUB_HOME`, `AGENT_HUB_PLANS_DIR`, `AGENT_HUB_CLAUDE_DIR`, `AGENT_HUB_CODEX_DIR`.
+Every source directory can also be redirected with environment variables, which is what demo mode uses: `AGENT_HUB_DATA_DIR`, `AGENT_HUB_HOME`, `AGENT_HUB_PLANS_DIR`, `AGENT_HUB_CLAUDE_DIR`, `AGENT_HUB_CODEX_DIR`. The launcher additionally reads `AGENT_HUB_REPO`, `AGENT_HUB_WEB_PORT`, and `AGENT_HUB_API_PORT`.
 
 **About the budgets:** providers do not expose plan limits through any API, so `limits` is whatever you decide it is. The useful move is to run the tool for a week, look at your own weekly totals, and set the ceiling somewhere above your normal pace. Then the bar means "unusually heavy week," which is a signal you can act on. A number copied from a marketing page is not.
 
